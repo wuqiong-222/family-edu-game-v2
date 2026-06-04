@@ -350,9 +350,9 @@ if menu_choice == "数据管理":
 # 实验流程
 else:
     if page == "input_id":
-        st.title("👨‍👩‍👧 家庭教育视角互换实验")
+        st.title("👨‍👩‍👧 家庭教育视角转换严肃游戏")
         st.divider()
-        pid = st.text_input("填写实验编号", placeholder="示例：P05")
+        pid = st.text_input("填写实验编号", placeholder="手机尾号4位")
         st.divider()
         if st.button("进入测评问卷", disabled=not pid, use_container_width=True):
             user.participant_id = pid
