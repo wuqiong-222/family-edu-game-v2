@@ -157,9 +157,9 @@ DELTA = {
     "homework": {"focus": 4, "mood": -2, "progress": 7, 
                  "patience": {"strict": 0, "gentle": 3, "balanced": 3}},
     "rest": {"focus": -5, "mood": 12, "progress": 0, 
-             "patience": {"strict": -10, "gentle": 0, "balanced": -3}},
+             "patience": {"strict": -6, "gentle": 0, "balanced": -3}},
     "distract": {"focus": -14, "mood": 4, "progress": 0, 
-                 "patience": {"strict": -15, "gentle": -8, "balanced": -11}},
+                 "patience": {"strict": -12, "gentle": -8, "balanced": -11}},
     "cant_solve": {"focus": -7, "mood": -12, "progress": 0, 
                    "patience": {"strict": -8, "gentle": -4, "balanced": -6}},
 }
