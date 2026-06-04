@@ -154,7 +154,7 @@ DIALOGUE_PAIRS = {
 }
 
 DELTA = {
-    "homework": {"focus": 4, "mood": -2, "progress": 10, 
+    "homework": {"focus": 4, "mood": -2, "progress": 7, 
                  "patience": {"strict": 0, "gentle": 3, "balanced": 3}},
     "rest": {"focus": -5, "mood": 12, "progress": 0, 
              "patience": {"strict": -10, "gentle": 0, "balanced": -3}},
