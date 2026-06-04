@@ -167,12 +167,48 @@ DELTA = {
 def ai_generate_dialogue(style, action, is_conflict):
     style_text = STYLE_NAMES[style]
     action_text = ACTION_CN[action]
-    conflict_text = "出现冲突" if is_conflict else "正常沟通"
 
-    prompt = f"""你是{style_text}家长，孩子正在{action_text}，当前{conflict_text}。
-请生成**一句家长的话**和**一句孩子回应**，简短自然，符合真实亲子对话。
-只返回JSON格式，不要其他内容：
-{{"parent":"","child":""}}"""
+    # 分三种人设严格定义，固定说话逻辑
+    if style == "strict":
+        # 专制型：严苛催促、指责挑剔、否定孩子；孩子常态怯懦顺从，冲突时委屈顶嘴
+        parent_prompt = """【专制型家长】说话短促强势，习惯催促、挑错、指责。
+孩子写字慢就催提速、字迹差就批评潦草、走神严厉训斥、不会做题指责上课不用功、没写完不许休息。"""
+        child_prompt = """孩子性格怯懦，大多小声认错顺从；发生冲突时压抑委屈，偶尔小声顶嘴反驳。"""
+    elif style == "gentle":
+        # 放任型：包容佛系，无要求不催促，不纠错；孩子放松随性，随心所欲
+        parent_prompt = """【放任型家长】态度随和佛系，没有学习硬性要求，孩子走神、不会做题、想休息全部包容，从不批评施压。"""
+        child_prompt = """孩子心态放松散漫，想到什么说什么，不用顾虑被指责，发言自在随意。"""
+    elif style == "balanced":
+        # 权威型：立规则+共情引导，有错指正、进步夸奖；孩子配合愿意沟通
+        parent_prompt = """【权威型家长】讲道理、有边界，孩子分心温和提醒，难题一起梳理思路，完成任务允许休息，做错客观指出问题，不挖苦指责。"""
+        child_prompt = """孩子心态平稳，愿意沟通倾诉，遇到困难主动求助，虚心接受合理建议。"""
+
+    # 绑定4种行为专属场景
+    if action == "homework":
+        scene = "孩子正在伏案写作业"
+    elif action == "rest":
+        scene = "孩子学习中途想要停下休息，作业尚未完成"
+    elif action == "distract":
+        scene = "孩子写作业走神分心、心思不在习题上"
+    elif action == "cant_solve":
+        scene = "孩子碰到难题卡住，没办法独立完成"
+    else:
+        scene = "日常亲子相处"
+
+    # 冲突加强规则：出现冲突时家长情绪升级
+    conflict_tip = "【当前触发亲子冲突，家长情绪加重，说话语气升级】" if is_conflict else ""
+
+    prompt = f"""
+角色设定：
+家长人设：{parent_prompt}
+孩子人设：{child_prompt}
+当前场景：{scene}，{conflict_tip}
+行为：孩子正在{action_text}
+要求：
+1. 仅生成一组对话：家长一句话 + 孩子一句话，口语生活化，短句，贴合对应教养风格
+2. 严格匹配当前场景行为，不能脱离写作业、休息、走神、不会做题的情境
+3. 只输出标准JSON，无多余文字，格式{{"parent":"","child":""}}
+"""
 
     headers = {
         "Authorization": f"Bearer {ZHIPU_API_KEY}",
@@ -182,7 +218,7 @@ def ai_generate_dialogue(style, action, is_conflict):
     data = {
         "model": LLM_MODEL_ZHIPU,
         "messages": [{"role": "user", "content": prompt}],
-        "temperature": 0.7
+        "temperature": 0.75
     }
 
     for _ in range(LLM_MAX_RETRY):
@@ -195,12 +231,11 @@ def ai_generate_dialogue(style, action, is_conflict):
             )
             if resp.status_code == 200:
                 res_json = resp.json()
-                content = res_json["choices"][0]["message"]["content"]
-                return json.loads(content.strip())
-        except:
+                content = res_json["choices"][0]["message"]["content"].strip()
+                return json.loads(content)
+        except Exception:
             continue
     return None
-
 def get_local_dialogue(style, action, is_conflict):
     lib = DIALOGUE_PAIRS[style]
     key = "conflict" if is_conflict else action
