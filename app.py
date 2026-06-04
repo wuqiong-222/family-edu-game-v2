@@ -154,10 +154,14 @@ DIALOGUE_PAIRS = {
 }
 
 DELTA = {
-    "homework": {"focus": 5, "mood": -3, "progress": 10, "patience": {"strict": 2, "gentle": 3, "balanced": 2}},
-    "rest": {"focus": -3, "mood": 8, "progress": 0, "patience": {"strict": -5, "gentle": 0, "balanced": -2}},
-    "distract": {"focus": -8, "mood": 5, "progress": 0, "patience": {"strict": -10, "gentle": -5, "balanced": -8}},
-    "cant_solve": {"focus": -6, "mood": -8, "progress": 0, "patience": {"strict": -6, "gentle": -2, "balanced": -4}},
+    "homework": {"focus": 4, "mood": -2, "progress": 10, 
+                 "patience": {"strict": 0, "gentle": 3, "balanced": 3}},
+    "rest": {"focus": -5, "mood": 12, "progress": 0, 
+             "patience": {"strict": -10, "gentle": 0, "balanced": -3}},
+    "distract": {"focus": -14, "mood": 4, "progress": 0, 
+                 "patience": {"strict": -15, "gentle": -8, "balanced": -11}},
+    "cant_solve": {"focus": -7, "mood": -12, "progress": 0, 
+                   "patience": {"strict": -8, "gentle": -4, "balanced": -6}},
 }
 
 def ai_generate_dialogue(style, action, is_conflict):
